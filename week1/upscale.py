@@ -9,6 +9,7 @@ rgb = img.shape[2]
 imgc = nump.zeros((imgrows, imgcols, rgb), dtype=int)
 
 scale = scale
+z = 0
 # countx = 0
 # county = 0
 # trix = 0
@@ -30,8 +31,18 @@ for x in range(imgrows):
         # else:
         #     triy = triy + 1
 
+        if z == 0:
+            imgc[x,y,:] = img[int(x / scale), int(y/scale),:]
+            z=z+1
+        elif z == 3:
+            imgc[x,y,:] = 0
+            z=0
+        else:
+            imgc[x,y,:] = 0
+            z = z+1
 
-        imgc[x,y,:] = img[int(x / scale), int(y/scale),:]
+
+
 
 
 # plt.imshow(imgc), plt.show()
