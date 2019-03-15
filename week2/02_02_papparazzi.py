@@ -1,8 +1,10 @@
 import urllib.request
 import os
+
 def getFilename(link):
     idx = link.rfind("/")
     idx = idx+1 if idx > -1 else 0
+    return link[idx:]
 
 def downloadResource(url, folder="."):
     file = getFilename(url)
