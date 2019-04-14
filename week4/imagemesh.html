@@ -2,71 +2,96 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+  <script src="https://unpkg.com/ml5@0.2.3/dist/ml5.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>
-    <script src="https://unpkg.com/ml5@0.1.3/dist/ml5.min.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
-    <script src="https://unpkg.com/@tensorflow-models/mobilenet"></script>
   </head>
   <body>
     <div>
-      Starting Image:
-    <input id="start"></input>
+       ImageA:
+    <!-- <input id="style"></input> -->
+    <img src="https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" id = "inputImg">
     </div>
 
-    <div>
-      style Image:
+    <!-- <div>
+    ImageB:
     <input id="style"></input>
-    </div>
-    <button onclick="setup()">Run</button>
+    </div> -->
+    <button id="transferBtn"onclick="setup()">Run</button>
 
-    <div id = 'imgs'></div>
+    <div id = 'statusMsg'></div>
+    <div id="imgdisplay"></div>
+    <div id="styleA"></div>
+    <div id = "styleB"></div>
 
     <script type="text/javascript">
-      function setup(){
-        // noCanvas();
-        console.log("start")
-      let start = document.getElementById("start").value
-      let style = document.getElementById("style").value
+    // Copyright (c) 2018 ml5
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
 
-      let img = document.createElement("img");
-      img.src = start;
-      img.width = img.width
-      img.height = img.height
-      let src = document.getElementById("imgs");
-      src.appendChild(img);
+/* ===
+ml5 Example
+Style Transfer Image Example using p5.js
+This uses a pre-trained model of The Great Wave off Kanagawa and Udnie (Young American Girl, The Dance)
+=== */
 
-      img = document.createElement("img");
-      img.src = style;
-      img.width = img.width
-      img.height = img.height
-      src = document.getElementById("imgs");
-      src.appendChild(img);
+let inputImg;
+let statusMsg;
+let transferBtn;
+let style1;
+let style2;
 
+// let setimg = document.getElementById("style").value
+//
+// let imgcreate = document.createElement("img");
+// imgcreate.src = setimg;
+// imgcreate.width = imgcreate.width
+// imgcreate.height = imgcreate.height
+// imgcreate.id = "inputImg"
+// document.getElementById('imgdisplay').appendChild(imgcreate);
 
-      start = tf.browser.fromPixels(document.getElementsByTagName("img")[0], 3)
-      style = tf.browser.fromPixels(document.getElementsByTagName("img")[0], 3)
-      console.log(start + "," + style)
+function setup() {
+  noCanvas();
+  // Status Msg
+  statusMsg = select('#statusMsg');
 
-      modelA = ml5.styleTransfer("models/wave", ready)
-      modelB = ml5.styleTransfer("models/udnie", ready)
-        console.log("start")
-        // modelA.transfer(start, (err, result)=>{
-        //   console.log("start")
-        //   createImg(result.src).parent(document.getElementsByTagName("img")[0]);
-        // })
+  // Get the input image
+  inputImg = select('#inputImg');
 
-        modelB.transfer(start, (err, result)=>{
-          console.log("finish")
-          createImg(result.src).parent(document.getElementsByTagName("img")[1]);
-        })
+  // Transfer Button
+  transferBtn = select('#transferBtn')
+  transferBtn.mousePressed(transferImages);
+
+  // Create two Style methods with different pre-trained models
+  style1 = ml5.styleTransfer('models/style-transfer/wave', modelLoaded);
+  style2 = ml5.styleTransfer('models/style-transfer/udnie', modelLoaded);
 }
 
-      function ready(){
-        if(modelA.ready && modelB.ready){
-          console.log("ready")
-        }
-      }
+// A function to be called when the models have loaded
+function modelLoaded() {
+  // Check if both models are loaded
+  if(style1.ready && style2.ready){
+    statusMsg.html('Ready!')
+  }
+}
+
+// Apply the transfer to both images!
+function transferImages() {
+  statusMsg.html('Applying Style Transfer...!');
+
+  style1.transfer(inputImg, function(err, result) {
+    console.log(result.src)
+    createImg(result.src).parent('styleA');
+  });
+
+  style2.transfer(inputImg, function(err, result) {
+    createImg(result.src).parent('styleB');
+  });
+
+  statusMsg.html('Done!');
+}
     </script>
   </body>
 </html>
