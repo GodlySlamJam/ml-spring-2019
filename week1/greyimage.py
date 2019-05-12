@@ -12,4 +12,5 @@ for x in range(imgrows):
         red[x,y,:] = tint
 
 plt.imshow(red), plt.show()
-plt.imsave("C:/Users/Phoenix-Ptah/Desktop/Nanohackers/ml-spring-2019/week1/bestwanglerouge.jpeg", red)
+red = red.astype(nump.uint8)
+plt.imsave("C:/Users/Phoenix-Ptah/Desktop/Nanohackers/ml-spring-2019/week1/bestwanglegrey.jpeg", red)

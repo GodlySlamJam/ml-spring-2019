@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as nump
 
-img = plt.imread("bestwangle.jpeg")
+img = plt.imread("bestwanglegrey.jpeg")
 imgrows, imgcols = img.shape[0], img.shape[1]
 rgb = img.shape[2]
 filtered = nump.zeros((imgrows, imgcols, rgb), dtype=int)
-blur=nump.array(([1,2,1],[0,0,0],[-1,-2,-1]))
+blur=nump.array(([-2,-1,0],[-1,1,1],[0,1,2]))
 
 
 print(blur[0][1])
